@@ -1,0 +1,23 @@
+.tabellone {
+    @apply dark:border-primary-500 border-2 border-solid mb-4;
+    @apply bg-gradient-to-b from-blue-400 to-white dark:from-gray-900 dark:to-gray-800;
+    padding: 2.5rem 1em 1em 1em;
+}
+
+.tabellone-header {
+    @apply text-center text-4xl;
+    padding-bottom: 2.5rem;
+}
+
+.tabellone .casella {
+    @apply dark:border-red-900;
+    @apply w-1/5;
+}
+
+.tabellone .casella.selected {
+    @apply bg-primary-500 text-white dark:bg-red-900;
+}
+
+.tabellone .casella.active {
+    @apply bg-yellow-400 text-black dark:text-white dark:bg-yellow-700;
+}

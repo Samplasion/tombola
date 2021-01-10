@@ -1,0 +1,45 @@
+.cartella {
+    @apply max-w-sm;
+    @apply border-gray-800 border-2 border-solid;
+    @apply bg-gradient-to-b from-blue-400 to-white dark:from-gray-900 dark:to-gray-800;
+    padding: 4.5rem 1.5em -0em 3.5rem;
+}
+
+.cartella.selected {
+    @apply from-primary-400 dark:from-primary-600;
+}
+
+.header-cartella {
+    @apply w-full bg-primary-500 !important;
+    @apply text-center;
+    @apply border-solid border-b border-black;
+}
+
+.layout-cartella {
+    @apply flex flex-wrap;
+    @apply border-black border-2 border-solid;
+}
+
+.number-cartella {
+    @apply w-8 h-8 !important;
+    @apply relative bottom-6 left-2 border-red-500 border-2 border-solid;
+    @apply text-lg text-center font-black;
+    margin-left: -3.25rem;
+    border-radius: 99999px;
+}
+
+.casella {
+    @apply border-red-400 border-solid border;
+    @apply w-1/9;
+    @apply text-center;
+    @apply h-12;
+    @apply bg-white dark:bg-gray-900;
+}
+.casella.called {
+    @apply bg-primary-500 text-white border-primary-500;
+}
+.casella .number {
+    @apply align-middle;
+    line-height: 3rem;
+    @apply font-extrabold text-xl;
+}

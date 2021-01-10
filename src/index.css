@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn {
+    @apply inline-flex text-white bg-primary-500 border-0 py-2 px-6 focus:outline-none hover:bg-primary-600 rounded text-lg transition-colors justify-center;
+}
+.btn.btn-outline {
+    @apply inline-flex dark:text-gray-400 text-gray-800 bg-gray-200 dark:bg-gray-800 border-0 py-2 px-6 focus:outline-none hover:bg-gray-300 dark:hover:bg-gray-700 dark:hover:text-white rounded text-lg;
+}
+
+.btn + .btn {
+    @apply ml-4;
+}
+
+input {
+    @apply px-3 py-3 placeholder-gray-400  dark:placeholder-gray-600 dark:text-gray-300 text-gray-700 relative dark:bg-black bg-white rounded text-sm shadow outline-none focus:outline-none focus:shadow w-full;
+}

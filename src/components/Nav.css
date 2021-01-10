@@ -1,0 +1,5 @@
+.navbar-link {
+    @apply block border-b-2 border-transparent hover:border-primary-500;
+    @apply lg:p-4 py-3 px-0;
+    @apply transition-all;
+}
