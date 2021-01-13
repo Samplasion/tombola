@@ -15,7 +15,8 @@ interface CartellaProps extends React.HTMLAttributes<HTMLDivElement> {
     number: number,
     layout: number[],
     called: number[], 
-    zIndex?: number
+    zIndex?: number,
+    disabled?: boolean
 }
 
 export default class Cartella extends Component<CartellaProps> {

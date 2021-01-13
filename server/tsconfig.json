@@ -1,7 +1,10 @@
 {
-    "extends": "../../tsconfig.json",
+    "extends": "../tsconfig.json",
     "compilerOptions": {
         "noEmit": false,
-        "outDir": "./build"
-    }
+        "outDir": "../build_server",
+        "target": "ES6",
+        "module": "commonjs"
+    },
+    "include": ["."]
 }

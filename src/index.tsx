@@ -4,6 +4,12 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { config } from "dotenv";
+import { join } from 'path';
+config({
+  path: join(__dirname, "..", ".env")
+});
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

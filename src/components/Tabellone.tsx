@@ -10,7 +10,7 @@ interface TabelloneProps {
 export default class Tabellone extends Component<TabelloneProps> {
     render() {
         return (
-            <div className="tabellone">
+            <div className="tabellone max-w-lg">
                 <div className="tabellone-header">
                     Tabellone
                 </div>

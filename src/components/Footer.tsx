@@ -1,15 +1,15 @@
 export default function Footer() {
     return (
-        <footer className="text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-900 body-font ">
+        <footer className="text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-900 body-font">
             <div className="container px-5 py-8 mx-auto flex items-center sm:flex-row flex-col">
                 <a className="flex title-font font-medium items-center md:justify-start justify-center text-black dark:text-white" href="/">
-                    <img className="w-10 h-10" src="/logo512.png" />
+                    <img className="w-10 h-10" src="/logo512.png" alt="Logo di Tombola online" />
                     <span className="ml-3 text-xl">Tombola</span>
                 </a>
                 <p className="text-sm text-gray-600 dark:text-gray-400 sm:ml-4 sm:pl-4 sm:border-l-2 sm:dark:border-gray-800 sm:border-gray-300 sm:py-2 sm:mt-0 mt-4">© 2020-{new Date().getFullYear()} Tombola —
                     <a href="https://twitter.com/samplasion" className="text-gray-400 dark:text-gray-500 ml-1" target="_blank" rel="noopener noreferrer">@Samplasion</a>
                 </p>
-                <span className="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
+                {/* <span className="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
                     <a className="text-gray-400">
                         <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} className="w-5 h-5" viewBox="0 0 24 24">
                             <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
@@ -32,7 +32,7 @@ export default function Footer() {
                             <circle cx={4} cy={4} r={2} stroke="none" />
                         </svg>
                     </a>
-                </span>
+                </span> */}
             </div>
         </footer>
     )

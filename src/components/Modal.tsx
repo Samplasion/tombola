@@ -1,7 +1,22 @@
 import React, { ReactNode } from "react";
 
-export default function Modal(props: { title: ReactNode, children: ReactNode, open: boolean, setOpen: (open: boolean) => void, buttons?: ReactNode }) {
+export default function Modal(props: { title: ReactNode, children: ReactNode, open: boolean, setOpen: (open: boolean) => void, buttons?: ReactNode, onReturn?: (...args: any[]) => void }) {
     const {open, setOpen} = props;
+    
+    function closeThisModal(event: KeyboardEvent) {
+        if (event.key === 'Escape') {
+            setOpen(false);
+            document.removeEventListener('keydown', closeThisModal);
+        } else if (event.key == 'Enter') {
+            if (document.activeElement instanceof HTMLElement)
+                document.activeElement.blur();
+            props.onReturn?.();
+            setOpen(false);
+            document.removeEventListener('keydown', closeThisModal);
+        }
+    }
+    document.addEventListener('keydown', closeThisModal);
+
     return (
         <>
             {open ? (
