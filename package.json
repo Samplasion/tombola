@@ -93,7 +93,7 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "server": "tsc --build server/tsconfig.json && node build_server"
+    "server": "tsc --build server/tsconfig.json && node build_server/server"
   },
   "eslintConfig": {
     "extends": [

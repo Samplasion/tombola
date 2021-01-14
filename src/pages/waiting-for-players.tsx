@@ -3,6 +3,7 @@ import React from "react";
 import Heading from "../components/Heading";
 import { useHistory } from "react-router-dom";
 import Modal from "../components/Modal";
+import { StrippedPlayer } from "../../common/types";
 
 interface WaitingForPlayersProps {
     socket: Socket;
@@ -10,13 +11,9 @@ interface WaitingForPlayersProps {
     gameKey: string;
     host: boolean;
 }
-interface Player {
-    id: string;
-    name: string;
-}
 
 export const WaitingForPlayers: React.FunctionComponent<WaitingForPlayersProps> = ({ socket, socketID, gameKey, host }) => {
-    const [players, setPlayers] = React.useState<Player[]>([]);
+    const [players, setPlayers] = React.useState<StrippedPlayer[]>([]);
     const [open, setOpen] = React.useState(false);
     const history = useHistory();
 
@@ -27,7 +24,7 @@ export const WaitingForPlayers: React.FunctionComponent<WaitingForPlayersProps> 
         // Request a player update
         console.log(gameKey);
         socket.emit("playersUpdate", gameKey);
-        socket.on("playersUpdate", (players: Player[]) => setPlayers(players));
+        socket.on("playersUpdate", (players: StrippedPlayer[]) => setPlayers(players));
         socket.on("startingGame", (givesTabellone: boolean) => {
             history.push(givesTabellone ? "/tabellone" : "/choose-cartelle");
         });
@@ -43,7 +40,7 @@ export const WaitingForPlayers: React.FunctionComponent<WaitingForPlayersProps> 
                 <Heading
                     className={host ? "w-full md:w-1/2" : ""}
                     title="Aspettando gli altri giocatori..."
-                    subtitle={host ? 'Quando sei pronto, premi "Gioca".' : "L'host della partita sceglierà quando iniziare."}
+                    subtitle={host ? 'Quando siete tutti pronti, premi "Gioca".' : 'Clicca "Pronto" per indicare all\'host che sei pronto per giocare.'}
                     />
                 {host && (
                     <div className="w-full md:w-1/2">
@@ -53,14 +50,17 @@ export const WaitingForPlayers: React.FunctionComponent<WaitingForPlayersProps> 
             </div>
             <ol className="list-decimal my-4 pl-10">
                 {players.map(p => {
-                    return <li>{p.name} {p.id === socketID && <>(<b>Tu!</b>)</>}</li>
+                    return <li><span className={p.ready ? "text-green-700 dark:text-green-400" : ""}>{p.username}</span> {p.id === socketID && <>(<b>Tu!</b>)</>}</li>
                 })}
             </ol>
-            {host && (
-                <div className="flex justify-end">
+            <div className="flex justify-end">
+                {host && (
                     <button className="btn my-4 s-full md:ws-auto" onClick={() => socket.emit("startGame")}>Gioca</button>
-                </div>
-            )}
+                )}
+                <button style={{ marginTop: "1rem" }} className={"btn my-4 s-full mt-4" + (host ? " btn-outline" : "")} onClick={() => socket.emit("ready")}>
+                    {players.find(player => player.id === socketID)?.ready ? "Non pronto" : "Pronto"}
+                </button>
+            </div>
             <Modal
                 title="Attenzione"
                 open={open}

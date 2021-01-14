@@ -11,10 +11,12 @@ export interface Player {
     hasTabellone: boolean;
     cartelle: number[];
     choseAllCartelle: boolean;
+    ready: boolean;
 }
 export interface StrippedPlayer {
     username: string;
     id: SocketID;
+    ready: boolean;
 }
 export enum TombolaAction {
     NONE,
@@ -39,4 +41,4 @@ export interface Room {
 export enum RoomJoinError {
     NoSuchRoom,
     GameHasStarted
-}
+};

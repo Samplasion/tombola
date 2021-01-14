@@ -1,7 +1,8 @@
 import { Socket } from "socket.io";
 import randomstring from "randomstring";
-import { PracticalTombolaAction, Room, RoomJoinError, SocketID, SocketWrapper, TombolaAction } from "../types";
+import { PracticalTombolaAction, Room, RoomJoinError, SocketID, SocketWrapper, StrippedPlayer, TombolaAction } from "../../common/types";
 import cartelle from "../cartelle";
+import { ServerEventNames } from "../../common/events";
 
 const rooms = new Map<string, Room>();
 const flatbellone = [...Array(90).keys()].map(n => n + 1);
@@ -29,6 +30,7 @@ export function createRoom(socket: Socket, id: SocketID, username: string) {
                 hasTabellone: false,
                 cartelle: [],
                 choseAllCartelle: false,
+                ready: true,
             }
         ],
         gameStarted: false,
@@ -71,7 +73,8 @@ export function joinRoom(socket: Socket, id: SocketID, username: string, roomID:
         username,
         hasTabellone: false,
         cartelle: [],
-        choseAllCartelle: false
+        choseAllCartelle: false,
+        ready: false,
     });
 
     room.players.forEach(player => {
@@ -100,10 +103,12 @@ export function joinRoom(socket: Socket, id: SocketID, username: string, roomID:
 export function updatePlayers(socket: Socket, id: SocketID, roomID: string) {
     if (!rooms.has(roomID))
         return socket.emit("playersUpdate", []);
-    socket.emit("playersUpdate", rooms.get(roomID)!.players.map(player => {
+    const room = rooms.get(roomID)!;
+    socket.emit("playersUpdate", room.players.map((player): StrippedPlayer => {
         return {
             id: player.socketData.id,
-            name: player.username
+            username: player.username,
+            ready: player.ready
         }
     }));
 }
@@ -136,7 +141,8 @@ export function extractNumber(socket: Socket, id: SocketID) {
             room.winners[previousOne(room.nextProgress) as PracticalTombolaAction] = progressing.map(({ player }) => {
                 return {
                     username: player.username,
-                    id: player.socketData.id
+                    id: player.socketData.id,
+                    ready: player.ready
                 }
             });
         }
@@ -257,6 +263,26 @@ export function pleaseGiveMeCartelle(socket: Socket, id: SocketID) {
     }
 
     socket.emit("gaveMeCartelle", room.players.find(player => player.socketData.id == id)?.cartelle ?? [0]);
+}
+
+export function ready(socket: Socket, id: SocketID) {
+    const roomID = roomIDForID(id) ?? "";
+    const room = rooms.get(roomID);
+    if (!room)
+        return;
+    
+    const i = room.players.findIndex(p => p.socketData.id === id);
+    room.players[i].ready = !room.players[i].ready;
+
+    everySocket(id).forEach(socket => {
+        socket.emit(ServerEventNames.PlayersUpdate, room.players.map((p): StrippedPlayer => {
+            return {
+                id: p.socketData.id,
+                username: p.username,
+                ready: p.ready
+            }
+        }))
+    });
 }
 
 function roomIDForID(id: SocketID): string | undefined {

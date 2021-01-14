@@ -6,33 +6,34 @@ import http from 'http';
 import socketio from 'socket.io';
 import randomstring from "randomstring";
 // import routes from './routes';
-import { chooseCartella, choseAllCartelle, createRoom, extractNumber, joinRoom, pleaseGiveMeCartelle, startGame, unchooseCartella, updatePlayers } from './routines/rooms';
+import { chooseCartella, choseAllCartelle, createRoom, extractNumber, joinRoom, pleaseGiveMeCartelle, ready, startGame, unchooseCartella, updatePlayers } from './routines/rooms';
 import cartelle from './cartelle';
 import {
     stripIndents
 } from "common-tags";
 import ip from "ip";
+import { ClientEventNames } from "../common/events";
 
 import { config } from "dotenv";
 import { join } from 'path';
 config({
-  path: join(__dirname, "..", ".env")
+  path: join(__dirname, "..", "..", ".env")
 });
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(express.static(path.join(__dirname, '..', 'build')));
+app.use(express.static(path.join(__dirname, '..', '..', 'build')));
 // app.use(routes);
 
 // 404 route
-app.get("*", (req, res) => res.sendFile(path.join(__dirname, '..', 'build', 'index.html')));
+app.get("*", (req, res) => res.sendFile(path.join(__dirname, '..', '..', 'build', 'index.html')));
 
 const server = http.createServer(app);
 const io = new socketio.Server(server, {
     cors: {
-        origin: "http://localhost:8080",
+        origin: process.env.DOMAIN,
         methods: ["GET", "POST"]
     }
 });
@@ -50,10 +51,11 @@ io.on("connection", (socket: socketio.Socket) => {
     socket.on("unchooseCartella", unchooseCartella.bind(null, socket, ID));
     socket.on("startGame", startGame.bind(null, socket, ID));
     socket.on("choseAllCartelle", choseAllCartelle.bind(null, socket, ID));
-    socket.on("pleaseGiveMeCartelle", pleaseGiveMeCartelle.bind(null, socket, ID));
-    socket.on("giveAllCartelle", () => {
-        socket.emit("giveAllCartelle", cartelle);
+    socket.on(ClientEventNames.PleaseGiveMeCartelle, pleaseGiveMeCartelle.bind(null, socket, ID));
+    socket.on(ClientEventNames.GiveAllCartelle, () => {
+        socket.emit(ClientEventNames.GiveAllCartelle, cartelle);
     });
+    socket.on(ClientEventNames.Ready, ready.bind(null, socket, ID));
 })
 
 const PORT = process.env.PORT || 8080;
