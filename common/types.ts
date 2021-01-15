@@ -40,5 +40,12 @@ export interface Room {
 };
 export enum RoomJoinError {
     NoSuchRoom,
-    GameHasStarted
+    GameHasStarted,
+    RoomIsFull
 };
+export const MAX_PLAYERS = 8;
+export enum GameStartError {
+    TooFewPlayers,
+    TooManyPlayers,
+    NotReady
+}

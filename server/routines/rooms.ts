@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import randomstring from "randomstring";
-import { PracticalTombolaAction, Room, RoomJoinError, SocketID, SocketWrapper, StrippedPlayer, TombolaAction } from "../../common/types";
+import { GameStartError, MAX_PLAYERS, PracticalTombolaAction, Room, RoomJoinError, SocketID, SocketWrapper, StrippedPlayer, TombolaAction } from "../../common/types";
 import cartelle from "../cartelle";
 import { ServerEventNames } from "../../common/events";
 
@@ -228,8 +228,14 @@ export function startGame(socket: Socket, id: SocketID) {
     if (!room)
         return;
 
-    if (room.players.length == 1) {
-        socket.emit("startGameError");
+    if (room.players.length <= 1) {
+        socket.emit("startGameError", GameStartError.TooFewPlayers);
+        return;
+    } else if (room.players.length >= MAX_PLAYERS) {
+        socket.emit("startGameError", GameStartError.TooManyPlayers);
+        return;
+    } else if (!room.players.every(player => player.ready)) {
+        socket.emit("startGameError", GameStartError.NotReady);
         return;
     }
     

@@ -4,6 +4,7 @@ import { useInput } from "../hooks/useInput";
 import { useHistory } from "react-router-dom";
 import Heading from "../components/Heading";
 import Modal from "../components/Modal";
+import { RoomJoinError } from "../../common/types";
 
 interface JoinRoomProps {
     socket: Socket;
@@ -22,11 +23,11 @@ export const JoinRoom: React.FunctionComponent<JoinRoomProps> = ({ socket, setHo
     function joinRoom(evt: React.MouseEvent<Element, MouseEvent>, name: string, key: string) {
         console.log(name, key.toUpperCase());
         socket.emit("joinRoom", name, key.toUpperCase());
-        socket.on("joinRoomError", (err: 0 | 1 | 2) => {
+        socket.on("joinRoomError", (err: RoomJoinError) => {
             switch (err) {
-                case 0: setModalContent("Questa stanza non esiste!"); break;
-                case 1: setModalContent("In quella stanza la partita è già iniziata."); break;
-                case 2: setModalContent("La stanza è piena."); break;
+                case RoomJoinError.NoSuchRoom: setModalContent("Questa stanza non esiste!"); break;
+                case RoomJoinError.GameHasStarted: setModalContent("In quella stanza la partita è già iniziata."); break;
+                case RoomJoinError.RoomIsFull: setModalContent("La stanza è piena."); break;
             }
             setOpen(true);
         });

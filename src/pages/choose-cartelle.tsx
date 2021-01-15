@@ -16,11 +16,11 @@ export default function ChooseCartelle({ socket, cartelle: allCartelle }: { sock
         setCartelle(cartelle.filter(c => cartella !== c));
     }
     function addCartella(cartella: number) {
-        socket.emit("chooseCartella", cartella);
         if (cartelle.length >= 5) {
             setOpen(true);
             return false;
         }
+        socket.emit("chooseCartella", cartella);
         setCartelle([...cartelle, cartella]);
         return true;
     }

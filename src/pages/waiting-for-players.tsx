@@ -3,7 +3,7 @@ import React from "react";
 import Heading from "../components/Heading";
 import { useHistory } from "react-router-dom";
 import Modal from "../components/Modal";
-import { StrippedPlayer } from "../../common/types";
+import { GameStartError, StrippedPlayer } from "../../common/types";
 
 interface WaitingForPlayersProps {
     socket: Socket;
@@ -15,6 +15,7 @@ interface WaitingForPlayersProps {
 export const WaitingForPlayers: React.FunctionComponent<WaitingForPlayersProps> = ({ socket, socketID, gameKey, host }) => {
     const [players, setPlayers] = React.useState<StrippedPlayer[]>([]);
     const [open, setOpen] = React.useState(false);
+    const [content, setContent] = React.useState("");
     const history = useHistory();
 
     if (!gameKey)
@@ -28,8 +29,13 @@ export const WaitingForPlayers: React.FunctionComponent<WaitingForPlayersProps> 
         socket.on("startingGame", (givesTabellone: boolean) => {
             history.push(givesTabellone ? "/tabellone" : "/choose-cartelle");
         });
-        socket.on("startGameError", () => {
+        socket.on("startGameError", (error: GameStartError) => {
             setOpen(true);
+            switch (error) {
+                case GameStartError.TooFewPlayers: setContent("Sei da solo. Non ti aspetterai mica di poter giocare da solo?"); break;
+                case GameStartError.TooManyPlayers: setContent("Siete più di otto giocatori. Non sarete troppi?"); break;
+                case GameStartError.NotReady: setContent("Non tutti sono pronti. Non avere fretta!"); break;
+            }
         });
         socket.on("disconnect", () => window.location.href = window.location.origin + "/")
     }, []); // eslint-disable-line
@@ -66,7 +72,7 @@ export const WaitingForPlayers: React.FunctionComponent<WaitingForPlayersProps> 
                 open={open}
                 setOpen={setOpen}
             >
-                Sei da solo. Non ti aspetterai mica di poter giocare da solo?
+                {content}
             </Modal>
         </>
     )
